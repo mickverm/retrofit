@@ -43,10 +43,10 @@ public final class FlowableTest {
 
   @Before public void setUp() {
     Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(server.url("/"))
-        .addConverterFactory(new StringConverterFactory())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build();
+            .baseUrl(server.url("/"))
+            .addConverterFactory(new StringConverterFactory())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build();
     service = retrofit.create(Service.class);
   }
 
@@ -78,15 +78,18 @@ public final class FlowableTest {
   @Test public void bodyRespectsBackpressure() {
     server.enqueue(new MockResponse().setBody("Hi"));
 
-    RecordingSubscriber<String> subscriber = subscriberRule.create();
-    service.body().subscribe(subscriber);
+    RecordingSubscriber<String> subscriber = subscriberRule.createWithInitialRequest(0);
+    Flowable<String> o = service.body();
 
+    o.subscribe(subscriber);
     assertThat(server.getRequestCount()).isEqualTo(1);
+    subscriber.assertNoEvents();
+
+    subscriber.request(1);
     subscriber.assertAnyValue().assertComplete();
 
     subscriber.request(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP or notifications.
     assertThat(server.getRequestCount()).isEqualTo(1);
-    subscriber.assertNoEvents();
   }
 
   @Test public void responseSuccess200() {
@@ -118,15 +121,18 @@ public final class FlowableTest {
   @Test public void responseRespectsBackpressure() {
     server.enqueue(new MockResponse().setBody("Hi"));
 
-    RecordingSubscriber<Response<String>> subscriber = subscriberRule.create();
-    service.response().subscribe(subscriber);
+    RecordingSubscriber<Response<String>> subscriber = subscriberRule.createWithInitialRequest(0);
+    Flowable<Response<String>> o = service.response();
 
+    o.subscribe(subscriber);
     assertThat(server.getRequestCount()).isEqualTo(1);
+    subscriber.assertNoEvents();
+
+    subscriber.request(1);
     subscriber.assertAnyValue().assertComplete();
 
     subscriber.request(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP or notifications.
     assertThat(server.getRequestCount()).isEqualTo(1);
-    subscriber.assertNoEvents();
   }
 
   @Test public void resultSuccess200() {
@@ -165,15 +171,18 @@ public final class FlowableTest {
   @Test public void resultRespectsBackpressure() {
     server.enqueue(new MockResponse().setBody("Hi"));
 
-    RecordingSubscriber<Result<String>> subscriber = subscriberRule.create();
-    service.result().subscribe(subscriber);
+    RecordingSubscriber<Result<String>> subscriber = subscriberRule.createWithInitialRequest(0);
+    Flowable<Result<String>> o = service.result();
 
+    o.subscribe(subscriber);
     assertThat(server.getRequestCount()).isEqualTo(1);
+    subscriber.assertNoEvents();
+
+    subscriber.request(1);
     subscriber.assertAnyValue().assertComplete();
 
     subscriber.request(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP or notifications.
     assertThat(server.getRequestCount()).isEqualTo(1);
-    subscriber.assertNoEvents();
   }
 
   @Test public void subscribeTwice() {

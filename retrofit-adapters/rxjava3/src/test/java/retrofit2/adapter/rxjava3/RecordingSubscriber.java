@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.FlowableSubscriber;
 import io.reactivex.rxjava3.core.Notification;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -30,7 +31,7 @@ import org.reactivestreams.Subscription;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /** A test {@link Subscriber} and JUnit rule which guarantees all events are asserted. */
-final class RecordingSubscriber<T> implements Subscriber<T> {
+final class RecordingSubscriber<T> implements FlowableSubscriber<T> {
   private final long initialRequest;
   private final Deque<Notification<T>> events = new ArrayDeque<>();
 
@@ -69,16 +70,16 @@ final class RecordingSubscriber<T> implements Subscriber<T> {
   public T takeValue() {
     Notification<T> notification = takeNotification();
     assertThat(notification.isOnNext())
-        .as("Expected onNext event but was " + notification)
-        .isTrue();
+            .as("Expected onNext event but was " + notification)
+            .isTrue();
     return notification.getValue();
   }
 
   public Throwable takeError() {
     Notification<T> notification = takeNotification();
     assertThat(notification.isOnError())
-        .as("Expected onError event but was " + notification)
-        .isTrue();
+            .as("Expected onError event but was " + notification)
+            .isTrue();
     return notification.getError();
   }
 
@@ -95,8 +96,8 @@ final class RecordingSubscriber<T> implements Subscriber<T> {
   public void assertComplete() {
     Notification<T> notification = takeNotification();
     assertThat(notification.isOnComplete())
-        .as("Expected onCompleted event but was " + notification)
-        .isTrue();
+            .as("Expected onCompleted event but was " + notification)
+            .isTrue();
     assertNoEvents();
   }
 
