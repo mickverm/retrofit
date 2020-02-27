@@ -70,16 +70,16 @@ final class RecordingSubscriber<T> implements FlowableSubscriber<T> {
   public T takeValue() {
     Notification<T> notification = takeNotification();
     assertThat(notification.isOnNext())
-            .as("Expected onNext event but was " + notification)
-            .isTrue();
+        .as("Expected onNext event but was " + notification)
+        .isTrue();
     return notification.getValue();
   }
 
   public Throwable takeError() {
     Notification<T> notification = takeNotification();
     assertThat(notification.isOnError())
-            .as("Expected onError event but was " + notification)
-            .isTrue();
+        .as("Expected onError event but was " + notification)
+        .isTrue();
     return notification.getError();
   }
 
@@ -96,8 +96,8 @@ final class RecordingSubscriber<T> implements FlowableSubscriber<T> {
   public void assertComplete() {
     Notification<T> notification = takeNotification();
     assertThat(notification.isOnComplete())
-            .as("Expected onCompleted event but was " + notification)
-            .isTrue();
+        .as("Expected onCompleted event but was " + notification)
+        .isTrue();
     assertNoEvents();
   }
 

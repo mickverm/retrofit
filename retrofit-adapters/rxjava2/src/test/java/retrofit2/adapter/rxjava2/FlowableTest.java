@@ -43,10 +43,10 @@ public final class FlowableTest {
 
   @Before public void setUp() {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(server.url("/"))
-            .addConverterFactory(new StringConverterFactory())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build();
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new StringConverterFactory())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .build();
     service = retrofit.create(Service.class);
   }
 
